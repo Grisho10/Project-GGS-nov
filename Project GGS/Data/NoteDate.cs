@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,7 +36,7 @@ namespace Project_GGS
                 connection.Close();
             }
             return noteList;
-        }   
+        }
         public Note Get(int id)
         {
             Note note = null;
@@ -100,6 +102,88 @@ namespace Project_GGS
                 connection.Close();
             }
         }
+        public List<Note> Longest()
+        {
+            var noteList = new List<Note>();
+            using (var connection = Database.GetConnection())
+            {
+                var command = new SqlCommand("SELECT *  from note where LEN(Description) = (SELECT MAX(LEN(Description)) from note );", connection);
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var product = new Note(
+                            reader.GetInt32(0),
+                            reader.GetString(1),
+                            reader.GetString(2),
+                            reader.GetString(3),
+                            reader.GetInt32(4)
+                        );
 
+                        noteList.Add(product);
+                    }
+                }
+                connection.Close();
+            }
+            return noteList;
+        }
+
+        public List<Note> Between(string startdata, string enddata)
+        {
+            var noteList = new List<Note>();
+            using (var connection = Database.GetConnection())
+            {
+
+                var command = new SqlCommand("SELECT * FROM note WHERE Dataa between @startdata AND @enddata ", connection);
+                command.Parameters.AddWithValue("startdata", startdata);
+                command.Parameters.AddWithValue("enddata", enddata);
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var product = new Note(
+                            reader.GetInt32(0),
+                            reader.GetString(1),
+                            reader.GetString(2),
+                            reader.GetString(3),
+                            reader.GetInt32(4)
+                        );
+
+                        noteList.Add(product);
+                    }
+                }
+                connection.Close();
+            }
+            return noteList;
+        }
+        public List<Note> OfLevel(int level)
+        {
+            var noteList = new List<Note>();
+            using (var connection = Database.GetConnection())
+            {
+                var command = new SqlCommand("SELECT * FROM note WHERE Level=@level", connection);
+                command.Parameters.AddWithValue("level", level);
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var product = new Note(
+                            reader.GetInt32(0),
+                            reader.GetString(1),
+                            reader.GetString(2),
+                            reader.GetString(3),
+                            reader.GetInt32(4)
+                        );
+
+                        noteList.Add(product);
+                    }
+                }
+                connection.Close();
+            }
+            return noteList;
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,5 +32,18 @@ namespace Project_GGS
         {
             general.Delete(id);
         }
+        public List<Note> Longest() 
+        {
+            return general.Longest();
+        }
+        public List<Note> Between(string startdata,string enddata)
+        {
+            return general.Between(startdata, enddata);
+        }
+        public List<Note> OfLevel(int level)
+        {
+            return general.OfLevel(level);
+        }
+
     }
 }
